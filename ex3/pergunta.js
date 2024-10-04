@@ -16,3 +16,12 @@ const aluno = pessoa("gabriel")
 const resultado = aluno ();
 console.log (pessoa, "aqui")
  */
+
+const resultado = document.getElementById("resultado");
+
+let numero1 = 50;
+for (let index = 0; index <= numero1; index++) {
+  console.log(index);
+}
+
+resultado.innerHTML = "Gabriel";
