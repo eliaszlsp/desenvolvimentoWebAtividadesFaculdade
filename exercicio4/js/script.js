@@ -44,10 +44,9 @@ const atualizarCarrinho = (array) => {
     listaDeCarrinho.innerHTML += html;
   }
   const total = document.querySelector("#total");
-  total.innerHTML = `Total: ${carrinho.reduce(
-    (acc, element) => acc + element.preco * element.quantidade,
-    0
-  )}`;
+  total.innerHTML = `Total:R$ ${carrinho
+    .reduce((acc, element) => acc + element.preco * element.quantidade, 0)
+    .toFixed(2)}`;
 };
 
 const adicionarCarrinho = (event) => {
