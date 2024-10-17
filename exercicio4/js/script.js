@@ -10,7 +10,10 @@ const produtos = [
   { id: 5, nome: "Teclado", preco: 100.0, quantidade: 20 },
 ];
 
-const carrinho = [];
+const carrinho = [
+  { id: 2, nome: "Mesa", preco: 350.0, quantidade: 5 },
+  { id: 1, nome: "Cadeira", preco: 150.0, quantidade: 10 },
+];
 
 const atualizarProdutos = (array) => {
   listaDeProdutos.innerHTML = " ";
@@ -79,7 +82,7 @@ const adicionarCarrinho = (event) => {
 
     produtos[indexProduto].quantidade--;
     atualizarCarrinho(carrinho);
-
+    
     return;
   } else {
     carrinho[verificarRepeticao].quantidade++;
@@ -88,6 +91,20 @@ const adicionarCarrinho = (event) => {
   }
 };
 
+console.log(carrinho , "antes");
+    
+carrinho.sort(function (a, b) {
+  if (a.nome < b.nome) {
+  return -1;
+}
+if (a.nome > b.nome) {
+  return 1;
+}
+return 0;
+});
+    console.log(carrinho , "depois")
+
+atualizarCarrinho(carrinho);
 const removerCarrinho = (event) => {
   const index = carrinho.findIndex((prop) => {
     return prop.nome === event.target.id;
