@@ -195,7 +195,6 @@ buttonOrdenar.addEventListener("click", (e) => {
 
 comprarButton.addEventListener("click", () => {
   if (carrinho.length === 0) {
-    comprarButton.disabled = true;
     alert("O carrinho está vazio.");
     return;
   }
