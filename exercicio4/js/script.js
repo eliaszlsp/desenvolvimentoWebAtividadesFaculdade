@@ -1,6 +1,7 @@
 const listaDeProdutos = document.querySelector("#listaProdutos");
 const listaDeCarrinho = document.querySelector("#listaCarrinho");
 const total = document.querySelector("#total");
+const formulario = document.querySelector("#formulario");
 
 const produtos = [
   { id: 1, nome: "Cadeira", preco: 150.0, quantidade: 10 },
@@ -10,10 +11,7 @@ const produtos = [
   { id: 5, nome: "Teclado", preco: 100.0, quantidade: 20 },
 ];
 
-const carrinho = [
-  { id: 2, nome: "Mesa", preco: 350.0, quantidade: 5 },
-  { id: 1, nome: "Cadeira", preco: 150.0, quantidade: 10 },
-];
+const carrinho = [];
 
 const atualizarProdutos = (array) => {
   listaDeProdutos.innerHTML = " ";
@@ -23,7 +21,7 @@ const atualizarProdutos = (array) => {
               <article>
                 <h2>${element.nome}</h2>
                 <p>Preço: ${element.preco}</p>
-                <button id=${element.nome}  class="adicionar">Adicionar ao Carrinho</button>
+                <button class="${element.nome} adicionar" >Adicionar ao Carrinho</button>
               </article>
             </li>      
          `;
@@ -33,32 +31,47 @@ const atualizarProdutos = (array) => {
 
 const atualizarCarrinho = (array) => {
   listaDeCarrinho.innerHTML = " ";
+
   for (const element of array) {
     const html = `
-            <li id="${element.nome}">
+            <li>
                <article>
                     <h2>${element.nome}</h2>
                     <p>Preço: ${element.preco}</p>
                     <p>quantidade: ${element.quantidade}</p>
-                    <button id=${element.nome}  class="retirar">retirar do carrinho</button>
+                    button class="ordenar">Ordenar Produtos</button>
+                    <button class="${element.nome} retirar">retirar do carrinho</button>
                   </article>
             </li>      
          `;
     listaDeCarrinho.innerHTML += html;
   }
   const total = document.querySelector("#total");
-  total.innerHTML = `Total:R$ ${carrinho
-    .reduce((acc, element) => acc + element.preco * element.quantidade, 0)
-    .toFixed(2)}`;
+  total.innerHTML = `Total: ${new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(
+    carrinho.reduce(
+      (acc, element) => acc + element.preco * element.quantidade,
+      0
+    )
+  )}`;
+};
+
+const ordenarProdutos = (array) => {
+  array.sort((a, b) => {
+    return a.nome.localeCompare(b.nome);
+  });
 };
 
 const adicionarCarrinho = (event) => {
   const { id, nome, preco, quantidade } = produtos.find((prop) => {
-    return prop.nome === event.target.id;
+    return prop.nome === event.target.className.split(" ")[0];
   });
+  console.log(id, nome, preco, quantidade);
 
   const indexProduto = produtos.findIndex((prop) => {
-    return prop.nome === event.target.id;
+    return prop.nome === event.target.className.split(" ")[0];
   });
   const objetoReferencia = {
     id,
@@ -82,7 +95,7 @@ const adicionarCarrinho = (event) => {
 
     produtos[indexProduto].quantidade--;
     atualizarCarrinho(carrinho);
-    
+
     return;
   } else {
     carrinho[verificarRepeticao].quantidade++;
@@ -91,34 +104,34 @@ const adicionarCarrinho = (event) => {
   }
 };
 
-console.log(carrinho , "antes");
-    
-carrinho.sort(function (a, b) {
-  if (a.nome < b.nome) {
-  return -1;
-}
-if (a.nome > b.nome) {
-  return 1;
-}
-return 0;
-});
-    console.log(carrinho , "depois")
-
-atualizarCarrinho(carrinho);
-const removerCarrinho = (event) => {
+const removerDoCarrinho = (event) => {
   const index = carrinho.findIndex((prop) => {
-    return prop.nome === event.target.id;
+    return prop.nome === event.target.className.split(" ")[0];
   });
-  const removerCarrinho = carrinho[index];
 
+  const indexProduto = produtos.findIndex((prop) => {
+    return prop.id === carrinho[index].id;
+  });
+
+  const removerCarrinho = carrinho[index];
+  produtos[indexProduto].quantidade++;
   removerCarrinho.quantidade--;
+  console.log(removerCarrinho);
+  const botaoQuantidadeAcimadeZero = document.querySelector(
+    ` #listaProdutos  .${event.target.className.split(" ")[0]}`
+  );
+
+  if (produtos[indexProduto].quantidade > 0) {
+    botaoQuantidadeAcimadeZero.disabled = false;
+  }
+
   if (carrinho[index].quantidade === 0) {
     carrinho.splice(index, 1);
   }
 
   atualizarCarrinho(carrinho);
 };
-
+atualizarCarrinho(carrinho);
 atualizarProdutos(produtos);
 
 listaDeProdutos.addEventListener("click", (e) => {
@@ -128,6 +141,18 @@ listaDeProdutos.addEventListener("click", (e) => {
 });
 listaDeCarrinho.addEventListener("click", (e) => {
   if (e.target.classList.contains("retirar")) {
-    removerCarrinho(e);
+    console.log("oi");
+    removerDoCarrinho(e);
   }
+});
+
+formulario.addEventListener("input", (e) => {
+  e.preventDefault();
+
+  const minusculo = e.target.value.toLowerCase();
+
+  const filter = produtos.filter((prop) => {
+    return prop.nome.toLowerCase().includes(minusculo);
+  });
+  atualizarProdutos(filter);
 });
