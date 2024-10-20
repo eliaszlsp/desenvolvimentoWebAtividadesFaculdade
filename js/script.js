@@ -30,7 +30,7 @@ const atualizarProdutos = (array) => {
     listaDeProdutos.innerHTML += html;
   }
 
-  ordenarProdutos(produtos);
+  ordenarProdutosPreco(produtos);
 };
 
 const atualizarCarrinho = (array) => {
@@ -63,16 +63,8 @@ const atualizarCarrinho = (array) => {
   )}`;
 };
 
-const ordenarProdutos = (array) => {
-  array.sort(function (a, b) {
-    if (a.nome < b.nome) {
-      return -1;
-    }
-    if (a.nome > b.nome) {
-      return 1;
-    }
-    return 0;
-  });
+const ordenarProdutosPreco = (array) => {
+  array.sort((a, b) => a.preco - b.preco);
 };
 
 const adicionarCarrinho = (event) => {
@@ -126,7 +118,7 @@ const removerDoCarrinho = (event) => {
   const removerCarrinho = carrinho[index];
   produtos[indexProduto].quantidade++;
   removerCarrinho.quantidade--;
-  console.log(removerCarrinho);
+
   const botaoQuantidadeAcimadeZero = document.querySelector(
     ` #listaProdutos  .${event.target.className.split(" ")[0]}`
   );
@@ -151,7 +143,6 @@ listaDeProdutos.addEventListener("click", (e) => {
 });
 listaDeCarrinho.addEventListener("click", (e) => {
   if (e.target.classList.contains("retirar")) {
-    console.log("oi");
     removerDoCarrinho(e);
   }
 });
@@ -169,8 +160,59 @@ formulario.addEventListener("input", (e) => {
 
 buttonOrdenar.addEventListener("click", (e) => {
   if (e.target.id === "ordenar" && carrinho.length > 1) {
-    console.log("oi");
-    ordenarProdutos(carrinho);
+    ordenarProdutosPreco(carrinho);
     atualizarCarrinho(carrinho);
   }
+});
+
+const comprarButton = document.getElementById("comprar");
+const modal = document.getElementById("modal");
+const closeButton = document.getElementsByClassName("close")[0];
+const finalizarCompraButton = document.getElementById("finalizarCompra");
+const modalListaCarrinho = document.getElementById("modalListaCarrinho");
+const modalTotal = document.getElementById("modalTotal");
+
+const atualizarModal = () => {
+  modalListaCarrinho.innerHTML = "";
+  for (const item of carrinho) {
+    const li = document.createElement("li");
+    li.textContent = `${item.nome} - Quantidade: ${
+      item.quantidade
+    } - Preço: ${new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(item.preco * item.quantidade)}`;
+    modalListaCarrinho.appendChild(li);
+  }
+  modalTotal.textContent = `Total: ${new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(
+    carrinho.reduce(
+      (acc, element) => acc + element.preco * element.quantidade,
+      0
+    )
+  )}`;
+};
+
+comprarButton.addEventListener("click", () => {
+  atualizarModal();
+  modal.style.display = "block";
+});
+
+closeButton.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+
+window.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
+finalizarCompraButton.addEventListener("click", () => {
+  alert("Compra finalizada! Obrigado pela sua compra.");
+  carrinho.length = 0;
+  atualizarCarrinho(carrinho);
+  modal.style.display = "none";
 });
