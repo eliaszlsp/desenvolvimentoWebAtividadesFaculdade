@@ -3,6 +3,12 @@ const listaDeCarrinho = document.querySelector("#listaCarrinho");
 const total = document.querySelector("#total");
 const formulario = document.querySelector("#formulario");
 const buttonOrdenar = document.querySelector(".ordenar");
+const comprarButton = document.getElementById("comprar");
+const modal = document.getElementById("modal");
+const closeButton = document.getElementsByClassName("close")[0];
+const finalizarCompraButton = document.getElementById("finalizarCompra");
+const modalListaCarrinho = document.getElementById("modalListaCarrinho");
+const modalTotal = document.getElementById("modalTotal");
 
 const produtos = [
   { id: 1, nome: "Cadeira", preco: 150.0, quantidade: 10 },
@@ -106,6 +112,28 @@ const adicionarCarrinho = (event) => {
   }
 };
 
+const atualizarModal = () => {
+  modalListaCarrinho.innerHTML = "";
+  for (const item of carrinho) {
+    const li = document.createElement("li");
+    li.textContent = `${item.nome} - Quantidade: ${
+      item.quantidade
+    } - Preço: ${new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(item.preco * item.quantidade)}`;
+    modalListaCarrinho.appendChild(li);
+  }
+  modalTotal.textContent = `Total: ${new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(
+    carrinho.reduce((acc, element) => {
+      return acc + element.preco * element.quantidade;
+    }, 0)
+  )}`;
+};
+
 const removerDoCarrinho = (event) => {
   const index = carrinho.findIndex((prop) => {
     return prop.nome === event.target.className.split(" ")[0];
@@ -165,37 +193,12 @@ buttonOrdenar.addEventListener("click", (e) => {
   }
 });
 
-const comprarButton = document.getElementById("comprar");
-const modal = document.getElementById("modal");
-const closeButton = document.getElementsByClassName("close")[0];
-const finalizarCompraButton = document.getElementById("finalizarCompra");
-const modalListaCarrinho = document.getElementById("modalListaCarrinho");
-const modalTotal = document.getElementById("modalTotal");
-
-const atualizarModal = () => {
-  modalListaCarrinho.innerHTML = "";
-  for (const item of carrinho) {
-    const li = document.createElement("li");
-    li.textContent = `${item.nome} - Quantidade: ${
-      item.quantidade
-    } - Preço: ${new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(item.preco * item.quantidade)}`;
-    modalListaCarrinho.appendChild(li);
-  }
-  modalTotal.textContent = `Total: ${new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(
-    carrinho.reduce(
-      (acc, element) => acc + element.preco * element.quantidade,
-      0
-    )
-  )}`;
-};
-
 comprarButton.addEventListener("click", () => {
+  if (carrinho.length === 0) {
+    comprarButton.disabled = true;
+    alert("O carrinho está vazio.");
+    return;
+  }
   atualizarModal();
   modal.style.display = "block";
 });
