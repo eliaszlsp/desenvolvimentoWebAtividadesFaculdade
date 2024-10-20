@@ -2,6 +2,7 @@ const listaDeProdutos = document.querySelector("#listaProdutos");
 const listaDeCarrinho = document.querySelector("#listaCarrinho");
 const total = document.querySelector("#total");
 const formulario = document.querySelector("#formulario");
+const buttonOrdenar = document.querySelector(".ordenar");
 
 const produtos = [
   { id: 1, nome: "Cadeira", preco: 150.0, quantidade: 10 },
@@ -15,6 +16,7 @@ const carrinho = [];
 
 const atualizarProdutos = (array) => {
   listaDeProdutos.innerHTML = " ";
+  buttonOrdenar.style.display = "none";
   for (const element of array) {
     const html = `
             <li>
@@ -27,22 +29,25 @@ const atualizarProdutos = (array) => {
          `;
     listaDeProdutos.innerHTML += html;
   }
+
+  ordenarProdutos(produtos);
 };
 
 const atualizarCarrinho = (array) => {
   listaDeCarrinho.innerHTML = " ";
-
+  if (carrinho.length > 1) {
+    buttonOrdenar.style.display = "block";
+  }
   for (const element of array) {
     const html = `
             <li>
-               <article>
+               <article>              
                     <h2>${element.nome}</h2>
                     <p>Preço: ${element.preco}</p>
-                    <p>quantidade: ${element.quantidade}</p>
-                    button class="ordenar">Ordenar Produtos</button>
+                    <p>quantidade: ${element.quantidade}</p>                    
                     <button class="${element.nome} retirar">retirar do carrinho</button>
                   </article>
-            </li>      
+            </li>            
          `;
     listaDeCarrinho.innerHTML += html;
   }
@@ -59,8 +64,14 @@ const atualizarCarrinho = (array) => {
 };
 
 const ordenarProdutos = (array) => {
-  array.sort((a, b) => {
-    return a.nome.localeCompare(b.nome);
+  array.sort(function (a, b) {
+    if (a.nome < b.nome) {
+      return -1;
+    }
+    if (a.nome > b.nome) {
+      return 1;
+    }
+    return 0;
   });
 };
 
@@ -68,7 +79,6 @@ const adicionarCarrinho = (event) => {
   const { id, nome, preco, quantidade } = produtos.find((prop) => {
     return prop.nome === event.target.className.split(" ")[0];
   });
-  console.log(id, nome, preco, quantidade);
 
   const indexProduto = produtos.findIndex((prop) => {
     return prop.nome === event.target.className.split(" ")[0];
@@ -155,4 +165,12 @@ formulario.addEventListener("input", (e) => {
     return prop.nome.toLowerCase().includes(minusculo);
   });
   atualizarProdutos(filter);
+});
+
+buttonOrdenar.addEventListener("click", (e) => {
+  if (e.target.id === "ordenar" && carrinho.length > 1) {
+    console.log("oi");
+    ordenarProdutos(carrinho);
+    atualizarCarrinho(carrinho);
+  }
 });

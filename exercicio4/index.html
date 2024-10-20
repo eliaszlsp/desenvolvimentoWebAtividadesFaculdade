@@ -7,20 +7,22 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <section>
+    <section class="carrinho-section">
       <h1>Carrinho</h1>
-      <ul id="listaCarrinho"></ul>
-      <h2 id="total"></h2>
+      <div class="ordenar">
+        <button id="ordenar">Ordenar Produtos</button>
+      </div>
+      <ul id="listaCarrinho" class="produto-lista"></ul>
+      <h2 id="total" class="total"></h2>
     </section>
-    <section>
-      <form id="formulario">
+    <section class="produtos-section">
+      <form id="formulario" class="busca-form">
         <label for="fname">Busque o Produto</label>
         <input type="text" id="fname" name="fname" />
       </form>
       <h1>Lista de Produtos</h1>
-      <ul id="listaProdutos"></ul>
+      <ul id="listaProdutos" class="produto-lista"></ul>
     </section>
-
     <script src="js/script.js"></script>
   </body>
 </html>

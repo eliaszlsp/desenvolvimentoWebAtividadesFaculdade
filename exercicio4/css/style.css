@@ -1,25 +1,67 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  background-color: #f5f5f5;
-  font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #333;
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f4f4;
 }
 
-ul {
-  list-style: none;
+h1,
+h2 {
+  color: #333;
 }
-li {
-  padding: 10px;
+
+section {
+  margin-bottom: 30px;
+}
+
+.carrinho-section,
+.produtos-section {
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.ordenar {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.produto-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.produto-lista li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
   border-bottom: 1px solid #ccc;
+}
+
+.produto-lista article {
+  width: 100%;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.total {
+  font-size: 1.5em;
+  text-align: right;
+}
+
+.busca-form {
+  margin-bottom: 20px;
 }
